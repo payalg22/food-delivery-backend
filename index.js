@@ -1,14 +1,25 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const cors = require('cors');
+
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
+
 dotenv.config();
 const app = express();
+
 app.use(express.json());
+app.use(cors());
 app.use("/api/v1", indexRouter);
 app.use("/api/v1/user", userRouter);
+const { v2: cloudinary } = require("cloudinary");
 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const port = process.env.PORT
 app.listen(port, () => {
