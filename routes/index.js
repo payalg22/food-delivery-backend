@@ -18,10 +18,10 @@ router.get("/assets", async (req, res) => {
     const data = resources.map((resource) => resource.secure_url);
 
     if (!data) {
-        return res.status(404).json({
-          message: "No images found",
-        });
-      }
+      return res.status(404).json({
+        message: "No images found",
+      });
+    }
 
     const getImg = (search) => {
       const img = data.find((item) => {
@@ -36,6 +36,9 @@ router.get("/assets", async (req, res) => {
       home: {
         heroComp1: getImg("hero-comp1"),
         heroComp2: getImg("hero-comp2"),
+        vectorOrder: getImg("home-vector-place-order"),
+        vectorTrack: getImg("home-vector-track"),
+        vectorDelivered: getImg("home-vector-delivered"),
       },
     };
 
