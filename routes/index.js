@@ -9,13 +9,35 @@ router.get("/", (req, res) => {
 });
 
 router.get("/assets", async (req, res) => {
-  try {
-    const { resources } = await cloudinary.api.resources({
-      type: "upload",
-      prefix: "food-delivery-assets/",
-    });
+//   try {
+//     const { resources } = await cloudinary.api.resources({
+//       type: "upload",
+//       prefix: "food-delivery-assets/",
+//       resource_type: "image",
+//     });
 
-    const data = resources.map((resource) => resource.secure_url);
+//     console.log(resources);
+
+
+
+let nextCursor = null;
+const allResources = [];
+
+do {
+  const { resources, next_cursor } = await cloudinary.api.resources({
+    type: "upload",
+    prefix: "food-delivery-assets/",
+    resource_type: "image",
+    max_results: 500,
+    next_cursor: nextCursor,
+  });
+
+  allResources.push(...resources);
+  nextCursor = next_cursor;
+} while (nextCursor);
+
+console.log(allResources);
+    const data = allResources.map((resource) => resource.secure_url);
 
     if (!data) {
       return res.status(404).json({
@@ -39,17 +61,15 @@ router.get("/assets", async (req, res) => {
         vectorOrder: getImg("home-vector-place-order"),
         vectorTrack: getImg("home-vector-track"),
         vectorDelivered: getImg("home-vector-delivered"),
+        chef: getImg("home-chef"),
+        rider: getImg("home-rider"),
+        ad: getImg("home-advertisement"),
       },
     };
 
-    //console.log(assets);
+    console.log(assets);
 
     return res.status(200).json(assets);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      message: "Error fetching images",
-    });
-  }
+  
 });
 module.exports = router;

@@ -5,6 +5,8 @@ const cors = require('cors');
 
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
+const dataRouter = require("./routes/data");
+const restoRouter = require("./routes/restaurant");
 
 dotenv.config();
 const app = express();
@@ -13,6 +15,8 @@ app.use(express.json());
 app.use(cors());
 app.use("/api/v1", indexRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/data", dataRouter);
+app.use("/api/v1/restaurant", restoRouter);
 const { v2: cloudinary } = require("cloudinary");
 
 cloudinary.config({
