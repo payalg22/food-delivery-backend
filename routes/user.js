@@ -31,6 +31,7 @@ router.post("/register", async (req, res) => {
       email,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Unexpected error occurred. Please try again",
     });
@@ -74,7 +75,7 @@ router.get("/", validate, async (req, res) => {
   const { user } = req;
   try {
     //get user data
-    const getUser = await User.findById(user, "name email address");
+    const getUser = await User.findById(user).select("-__v -password -createdAt");
     if (!getUser) {
       return res.status(404).json({
         message: "User not found",

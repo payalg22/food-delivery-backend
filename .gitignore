@@ -1,5 +1,5 @@
 node_modules
 .env
-restuarants.schema.js
 data
 data.js
+getUrl.js
