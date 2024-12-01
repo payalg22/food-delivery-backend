@@ -36,28 +36,32 @@ const addressSchema = new Schema({
   },
 });
 
-// const paymentSchema = new Schema({
-//     cardnumber: {
-//       type: Number,
-//       required: true,
-//     },
-//     expiry: {
-//       type: Date,
-//       required: true,
-//     },
-//     cvc: {
-//       type: Number,
-//       required: true,
-//       validate: {
-//           validator: (value) => String(value).length === 3,
-//           message: "CVC must be 3 digits",
-//       }
-//     },
-//     name: {
-//       type: String,
-//       required: true,
-//     },
-//   });
+const paymentSchema = new Schema({
+  user: {
+    type: SchemaTypes.ObjectId,
+    ref: "User",
+  },
+  cardnumber: {
+    type: Number,
+    required: true,
+  },
+  expiry: {
+    type: Date,
+    required: true,
+  },
+  cvc: {
+    type: Number,
+    required: true,
+    validate: {
+      validator: (value) => String(value).length === 3,
+      message: "CVC must be 3 digits",
+    },
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+});
 
 const userSchema = new Schema({
   name: {
@@ -80,7 +84,13 @@ const userSchema = new Schema({
   address: [
     {
       type: SchemaTypes.ObjectId,
-      ref: "Restaurant",
+      ref: "Address",
+    },
+  ],
+  payment: [
+    {
+      type: SchemaTypes.ObjectId,
+      ref: "Payment",
     },
   ],
   createdAt: {
@@ -89,7 +99,8 @@ const userSchema = new Schema({
   },
 });
 
-const Restaurant = new model("Retaurant", restaurantSchema);
+const Address = new model("Address", addressSchema);
+const Payment = new model("Payment", paymentSchema);
 const User = new model("User", userSchema);
 
-module.exports = { User, Restaurant };
+module.exports = { User, Address };

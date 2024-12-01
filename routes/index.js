@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { v2: cloudinary } = require("cloudinary");
+const {Location} = require("../schemas/data.schema");
 
 router.get("/", (req, res) => {
   return res.status(200).json({
@@ -8,6 +9,7 @@ router.get("/", (req, res) => {
   });
 });
 
+//Get assets
 router.get("/assets", async (req, res) => {
   let nextCursor = null;
   const allResources = [];
@@ -59,6 +61,17 @@ router.get("/assets", async (req, res) => {
   //console.log(assets);
 
   return res.status(200).json(assets);
+});
+
+//Get State list
+router.get("/states", async (req, res) => {
+    const list = await Location.findOne({country: "India"}).select("-_id -__v");
+
+    if(!list) {
+        return res.status(404).json({message: "Data not found"});
+    }
+
+    return res.status(200).json(list);
 });
 
 module.exports = router;

@@ -18,4 +18,6 @@ const catSchema = new Schema ({
 
 const Category = new model("Category", catSchema);
 
+//TODO menu schema
+
 module.exports = { Restaurant, Category };
