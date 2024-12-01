@@ -75,7 +75,9 @@ router.get("/", validate, async (req, res) => {
   const { user } = req;
   try {
     //get user data
-    const getUser = await User.findById(user).select("-__v -password -createdAt");
+    const getUser = await User.findById(user).select(
+      "-__v -password -createdAt"
+    );
     if (!getUser) {
       return res.status(404).json({
         message: "User not found",
@@ -84,6 +86,31 @@ router.get("/", validate, async (req, res) => {
     return res.status(200).json(getUser);
   } catch (error) {
     console.log(error);
+    return res.status(500).json({
+      message: "Unexpected error occurred. Please try again",
+    });
+  }
+});
+
+//Update User Details
+router.put("/edit", validate, async (req, res) => {
+  const { user } = req;
+  let data = req.body;
+    console.log(data);
+  try {
+    let userInfo = await User.findById(user).select("-password -createdAt -__v");
+    if (!userInfo) {
+      return res.status(404).json({ messsage: "User not found" });
+    }
+
+    if (userInfo._id.toString() !== data._id.toString()) {
+      return res.status(400).json({ messsage: "Can't update user" });
+    }
+
+    userInfo = await User.findByIdAndUpdate(user, data, { new: true }).select("-password -createdAt -__v");
+    res.status(201).json(userInfo);
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({
       message: "Unexpected error occurred. Please try again",
     });
