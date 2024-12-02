@@ -14,4 +14,25 @@ const locationSchema = new Schema ({
 
 const Location = new model("Location", locationSchema);
 
-module.exports = { Location };
+const reviewSchema = new Schema ({
+    name: {
+        type: String,
+        required: true,
+    },
+    city: {
+        type: String,
+        required: true,
+    },
+    date: {
+        type: String,
+        required: true,
+    },
+    review: {
+        type: String,
+        required: true,
+    }
+});
+
+const Review = new model("Review", reviewSchema);
+
+module.exports = { Location, Review };

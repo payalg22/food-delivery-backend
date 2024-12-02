@@ -35,41 +35,41 @@ router.get("/others", async (req, res) => {
 
   const sortRestauarants = (type) => {
     var restaurants = response.filter((place) => {
-        return place.type === type;
-      });
-      return {
-        type,
-        restaurants,
-      }
-  }
+      return place.type === type;
+    });
+    return {
+      type,
+      restaurants,
+    };
+  };
 
   var restoArr = ["Pizza & Fast food", "Vegan", "Sushi", "Others"];
   restoArr = restoArr.map((item) => {
     return sortRestauarants(item);
-  })
+  });
 
-//   const vegan = response.filter((place) => {
-//     return place.type === "Vegan";
-//   });
+  return res.status(200).json(restoArr);
+});
 
-//   const sushi = response.filter((place) => {
-//     return place.type === "Sushi";
-//   });
+//get specific restaurant details
+router.get("/info/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await Restaurant.findById(id).select("-isPopular -__v");
 
-//   const others = response.filter((place) => {
-//     return place.type === "Others";
-//   });
+    if (!response) {
+      return res.status(404).json({
+        message: "Restaurant not found",
+      });
+    }
 
-  
-
-//   return res.status(200).json({
-//     pizzaNFastFood,
-//     vegan,
-//     sushi,
-//     others,
-//   });
-
-return res.status(200).json(restoArr);
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
 });
 
 module.exports = router;
