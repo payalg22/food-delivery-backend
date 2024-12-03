@@ -96,7 +96,6 @@ router.get("/", validate, async (req, res) => {
 router.put("/edit", validate, async (req, res) => {
   const { user } = req;
   let data = req.body;
-  console.log(data);
   try {
     let userInfo = await User.findById(user).select(
       "-password -createdAt -__v"

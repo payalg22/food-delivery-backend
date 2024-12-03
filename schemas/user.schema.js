@@ -52,10 +52,6 @@ const paymentSchema = new Schema({
   cvc: {
     type: Number,
     required: true,
-    validate: {
-      validator: (value) => String(value).length === 3,
-      message: "CVC must be 3 digits",
-    },
   },
   name: {
     type: String,
@@ -103,4 +99,4 @@ const Address = new model("Address", addressSchema);
 const Payment = new model("Payment", paymentSchema);
 const User = new model("User", userSchema);
 
-module.exports = { User, Address };
+module.exports = { User, Address, Payment };

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Restaurant, Category } = require("../schemas/restuarants.schema");
+const { Menu } = require("../schemas/menu.schema");
 
 //get popular restaurants
 router.get("/popular", async (req, res) => {
@@ -64,6 +65,42 @@ router.get("/info/:id", async (req, res) => {
     }
 
     return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+});
+
+//get Menu - for a particular restaurant
+router.get("/menu/:id", async (req, res) => {
+  //restaurant id
+  const { id } = req.params;
+  try {
+    const getMenu = async (category) => {
+      const response = await Menu.find({
+        $and: [{ restaurant: id }, { category }],
+      }).select("-__v -category -restaurant");
+
+      return response;
+    };
+
+    const menu = {
+      Combos: await getMenu("Combos"),
+      Snacks: await getMenu("Snacks"),
+      Breakfast: await getMenu("Breakfast"),
+      Pizza: await getMenu("Pizza"),
+      Fries: await getMenu("Fries"),
+    };
+
+    if (!menu) {
+      return res.status(404).json({
+        message: "Menu not available",
+      });
+    }
+
+    return res.status(200).json(menu);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
