@@ -8,6 +8,7 @@ const userRouter = require("./routes/user");
 //const dataRouter = require("./routes/data");
 const restoRouter = require("./routes/restaurant");
 const orderRouter = require("./routes/order");
+const addressRouter = require("./routes/address");
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ app.use("/api/v1/user", userRouter);
 //app.use("/api/v1/data", dataRouter);
 app.use("/api/v1/restaurant", restoRouter);
 app.use("/api/v1/cart", orderRouter);
+app.use("/api/v1/address", addressRouter);
 const { v2: cloudinary } = require("cloudinary");
 
 cloudinary.config({

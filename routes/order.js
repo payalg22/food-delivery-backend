@@ -37,13 +37,47 @@ router.post("/add/:itemid", validate, async (req, res) => {
   return res.status(201).json(response);
 });
 
+//TODO: select payment method route
+router.put("/payment/:id", validate, async (req, res) => {
+  const { id } = req.params();
+  const { user } = req;
+  const cardId = new mongoose.Types.ObjectId(`${id}`);
+
+  try {
+    const cart = await Cart.findOneAndUpdate(
+      { user },
+      { payment: cardId },
+      { new: true }
+    );
+
+    return res.status(204);
+  } catch (error) {}
+});
+
+//TODO: select address route
+router.put("/address/:id", validate, async (req, res) => {
+  const { id } = req.params();
+  const { user } = req;
+  const addrId = new mongoose.Types.ObjectId(`${id}`);
+
+  try {
+    const cart = await Cart.findOneAndUpdate(
+      { user },
+      { address: addrId },
+      { new: true }
+    );
+
+    return res.status(204);
+  } catch (error) {}
+});
+
 //Get cart for user
 router.get("/", validate, async (req, res) => {
   const { user } = req;
 
   const response = await Cart.findOne({ user }).select("-__v -user").populate({
     path: "items.item",
-    select: "name price",
+    select: "name price img",
   });
 
   if (!response) {

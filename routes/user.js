@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User, Address } = require("../schemas/user.schema");
+const { User } = require("../schemas/user.schema");
 const jwt = require("jsonwebtoken");
 const validate = require("../middleware/auth");
 
@@ -116,88 +116,6 @@ router.put("/edit", validate, async (req, res) => {
     console.log(err);
     return res.status(500).json({
       message: "Unexpected error occurred. Please try again",
-    });
-  }
-});
-
-//new User Address
-router.post("/address/new", validate, async (req, res) => {
-  const { user } = req;
-  let data = req.body;
-
-  try {
-    var userInfo = await User.findById(user);
-
-    if (!userInfo) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    const isDefault = userInfo?.address?.length === 0 ? true : false;
-    const address = new Address({
-      user,
-      ...data,
-      isDefault,
-    });
-    const response = await address.save();
-    userInfo.address = [...userInfo.address, response._id];
-    await userInfo.save();
-
-    res.status(201).json({
-      message: "Address Saved",
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      message: "Something went wrong",
-    });
-  }
-});
-
-//Update Address
-router.put("/address/edit", validate, async (req, res) => {
-  let data = req.body;
-
-  try {
-    var address = await Address.findByIdAndUpdate(data._id, data);
-
-    if (!address) {
-      return res.status(404).json({
-        message: "Address not found",
-      });
-    }
-
-    return res.status(201).json({
-      message: "Address Updated",
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      message: "Something went wrong",
-    });
-  }
-});
-
-router.delete("/address/delete/:id", validate, async (req, res) => {
-  let { id } = req.params;
-  const { user } = req;
-
-  try {
-    var address = await Address.findByIdAndDelete(id);
-    if (!address) {
-      return res.status(202).json({
-        message: "Address not found",
-      });
-    }
-    await User.findByIdAndUpdate(user, {
-      $pull: { address: id },
-    });
-
-    return res.status(200).json({
-      message: "Address Deleted",
-    });
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({
-      message: "Something went wrong",
     });
   }
 });

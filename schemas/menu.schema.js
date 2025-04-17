@@ -11,6 +11,7 @@ const menuSchema = new Schema({
   price: Number,
   category: String,
   description: String,
+  img: String,
 });
 
 const Menu = new model("Menu", menuSchema);
